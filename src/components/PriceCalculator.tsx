@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Slider } from "@/components/ui/slider";
@@ -147,9 +148,9 @@ const PriceCalculator = () => {
                       {months}
                     </span>
                   </div>
-                  <Slider value={[months]} min={1} max={12} step={1} onValueChange={handleMonthsChange} className="py-2" />
+                  <Slider value={[months]} min={2} max={12} step={1} onValueChange={handleMonthsChange} className="py-2" />
                   <div className="flex justify-between text-xs text-calculator-foreground/70">
-                    <span>1 mês</span>
+                    <span>2 meses</span>
                     <span>12 meses</span>
                   </div>
                 </div>
