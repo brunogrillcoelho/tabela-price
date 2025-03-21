@@ -142,7 +142,7 @@ const PriceCalculator = () => {
                     <Label className="text-sm font-medium text-calculator-foreground">
                       Número de parcelas
                     </Label>
-                    <span className="text-lg font-medium text-calculator-accent">
+                    <span className="text-lg font-medium text-neutral-700">
                       {months}
                     </span>
                   </div>
