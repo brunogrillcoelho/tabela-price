@@ -35,8 +35,8 @@ const Index = () => {
       delay: 0.8,
       duration: 0.5
     }} className="mt-8 text-xs text-center text-muted-foreground">
-        <p>Esta calculadora utiliza o sistema de amortização Tabela Price com entrada zero.</p>
-        <p>Os valores são apenas para simulação e podem variar conforme condições específicas.</p>
+        
+        
       </motion.div>
     </div>;
 };
