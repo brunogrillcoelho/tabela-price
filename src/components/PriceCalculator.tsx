@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Slider } from "@/components/ui/slider";
@@ -10,53 +9,39 @@ import { Button } from "@/components/ui/button";
 import CalculatorResults from './CalculatorResults';
 
 // Calculate monthly payment using Price Table formula
-const calculateMonthlyPayment = (
-  principal: number,
-  interestRate: number,
-  months: number
-): number => {
+const calculateMonthlyPayment = (principal: number, interestRate: number, months: number): number => {
   // Convert annual interest rate to monthly decimal
   const monthlyRate = interestRate / 100;
-  
+
   // Price table formula: PMT = P * [r(1+r)^n] / [(1+r)^n - 1]
   const numerator = monthlyRate * Math.pow(1 + monthlyRate, months);
   const denominator = Math.pow(1 + monthlyRate, months) - 1;
-  
+
   // Avoid division by zero
   if (denominator === 0) return principal / months;
-  
   return principal * (numerator / denominator);
 };
 
 // Calculate amortization schedule
-const calculateAmortizationSchedule = (
-  principal: number,
-  interestRate: number,
-  months: number
-) => {
+const calculateAmortizationSchedule = (principal: number, interestRate: number, months: number) => {
   const monthlyRate = interestRate / 100;
   const monthlyPayment = calculateMonthlyPayment(principal, interestRate, months);
   const schedule = [];
-  
   let remainingBalance = principal;
-  
   for (let month = 1; month <= months; month++) {
     const interestPayment = remainingBalance * monthlyRate;
     const principalPayment = monthlyPayment - interestPayment;
     remainingBalance -= principalPayment;
-    
     schedule.push({
       month,
       payment: monthlyPayment,
       principalPayment,
       interestPayment,
-      remainingBalance: Math.max(0, remainingBalance),
+      remainingBalance: Math.max(0, remainingBalance)
     });
   }
-  
   return schedule;
 };
-
 const PriceCalculator = () => {
   const [purchaseAmount, setPurchaseAmount] = useState<number>(1000);
   const [interestRate, setInterestRate] = useState<number>(1);
@@ -66,71 +51,64 @@ const PriceCalculator = () => {
   const [totalInterest, setTotalInterest] = useState<number>(0);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [isCalculated, setIsCalculated] = useState<boolean>(false);
-  
+
   // Format currency
   const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'BRL'
     }).format(value);
   };
-  
+
   // Handle purchase amount input
   const handlePurchaseAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setPurchaseAmount(isNaN(value) ? 0 : value);
     setIsCalculated(false);
   };
-  
+
   // Handle interest rate selection
   const handleInterestRateChange = (value: string) => {
     setInterestRate(parseFloat(value));
     setIsCalculated(false);
   };
-  
+
   // Handle months slider
   const handleMonthsChange = (value: number[]) => {
     setMonths(value[0]);
     setIsCalculated(false);
   };
-  
+
   // Calculate results
   const calculateResults = () => {
     if (purchaseAmount <= 0) return;
-    
     const payment = calculateMonthlyPayment(purchaseAmount, interestRate, months);
     setMonthlyPayment(payment);
-    
     const total = payment * months;
     setTotalPayment(total);
-    
     const interest = total - purchaseAmount;
     setTotalInterest(interest);
-    
-    const amortizationSchedule = calculateAmortizationSchedule(
-      purchaseAmount,
-      interestRate,
-      months
-    );
+    const amortizationSchedule = calculateAmortizationSchedule(purchaseAmount, interestRate, months);
     setSchedule(amortizationSchedule);
-    
     setIsCalculated(true);
   };
-  
+
   // Recalculate when inputs change
   useEffect(() => {
     if (isCalculated) {
       calculateResults();
     }
   }, [purchaseAmount, interestRate, months]);
-  
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+  return <div className="w-full max-w-4xl mx-auto">
+      <motion.div initial={{
+      opacity: 0,
+      y: 20
+    }} animate={{
+      opacity: 1,
+      y: 0
+    }} transition={{
+      duration: 0.5
+    }}>
         <Card className="overflow-hidden border border-calculator-border bg-calculator-background shadow-lg">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -143,15 +121,7 @@ const PriceCalculator = () => {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-calculator-foreground/70">
                       R$
                     </span>
-                    <Input
-                      id="purchaseAmount"
-                      type="number"
-                      min="0"
-                      step="100"
-                      value={purchaseAmount}
-                      onChange={handlePurchaseAmountChange}
-                      className="pl-8 h-12 bg-calculator-muted/50 border-calculator-border"
-                    />
+                    <Input id="purchaseAmount" type="number" min="0" step="100" value={purchaseAmount} onChange={handlePurchaseAmountChange} className="pl-8 h-12 bg-calculator-muted/50 border-calculator-border" />
                   </div>
                 </div>
                 
@@ -159,29 +129,11 @@ const PriceCalculator = () => {
                   <Label className="text-sm font-medium text-calculator-foreground">
                     Taxa de juros mensal
                   </Label>
-                  <RadioGroup
-                    value={interestRate.toString()}
-                    onValueChange={handleInterestRateChange}
-                    className="flex space-x-2"
-                  >
-                    {[1, 2, 3].map((rate) => (
-                      <Label
-                        key={rate}
-                        htmlFor={`rate-${rate}`}
-                        className={`flex-1 flex items-center justify-center h-12 rounded-md border transition-all duration-200 ${
-                          interestRate === rate
-                            ? "border-calculator-accent bg-calculator-accent/10 text-calculator-accent"
-                            : "border-calculator-border bg-calculator-muted/50 hover:bg-calculator-muted/80"
-                        }`}
-                      >
-                        <RadioGroupItem
-                          value={rate.toString()}
-                          id={`rate-${rate}`}
-                          className="sr-only"
-                        />
+                  <RadioGroup value={interestRate.toString()} onValueChange={handleInterestRateChange} className="flex space-x-2">
+                    {[1, 2, 3].map(rate => <Label key={rate} htmlFor={`rate-${rate}`} className={`flex-1 flex items-center justify-center h-12 rounded-md border transition-all duration-200 ${interestRate === rate ? "border-calculator-accent bg-calculator-accent/10 text-calculator-accent" : "border-calculator-border bg-calculator-muted/50 hover:bg-calculator-muted/80"}`}>
+                        <RadioGroupItem value={rate.toString()} id={`rate-${rate}`} className="sr-only" />
                         {rate}%
-                      </Label>
-                    ))}
+                      </Label>)}
                   </RadioGroup>
                 </div>
                 
@@ -194,43 +146,23 @@ const PriceCalculator = () => {
                       {months}
                     </span>
                   </div>
-                  <Slider
-                    value={[months]}
-                    min={1}
-                    max={12}
-                    step={1}
-                    onValueChange={handleMonthsChange}
-                    className="py-2"
-                  />
+                  <Slider value={[months]} min={1} max={12} step={1} onValueChange={handleMonthsChange} className="py-2" />
                   <div className="flex justify-between text-xs text-calculator-foreground/70">
                     <span>1 mês</span>
                     <span>12 meses</span>
                   </div>
                 </div>
                 
-                <Button
-                  onClick={calculateResults}
-                  className="w-full h-12 bg-calculator-accent hover:bg-calculator-accent/90 text-white transition-all duration-300"
-                >
+                <Button onClick={calculateResults} className="w-full h-12 transition-all duration-300 font-extrabold text-neutral-700 bg-[#edff00]">
                   Calcular
                 </Button>
               </div>
               
-              <CalculatorResults
-                isCalculated={isCalculated}
-                purchaseAmount={purchaseAmount}
-                monthlyPayment={monthlyPayment}
-                totalPayment={totalPayment}
-                totalInterest={totalInterest}
-                formatCurrency={formatCurrency}
-                schedule={schedule}
-              />
+              <CalculatorResults isCalculated={isCalculated} purchaseAmount={purchaseAmount} monthlyPayment={monthlyPayment} totalPayment={totalPayment} totalInterest={totalInterest} formatCurrency={formatCurrency} schedule={schedule} />
             </div>
           </CardContent>
         </Card>
       </motion.div>
-    </div>
-  );
+    </div>;
 };
-
 export default PriceCalculator;
