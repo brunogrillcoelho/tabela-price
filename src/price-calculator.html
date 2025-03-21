@@ -1,0 +1,677 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Tabela Price</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #111827;
+      line-height: 1.5;
+    }
+    
+    .calculator-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: #fff;
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+    }
+    
+    .calculator-content {
+      padding: 1.5rem;
+    }
+    
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (min-width: 768px) {
+      .calculator-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .input-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #111827;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .currency-symbol {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    
+    .form-input {
+      width: 100%;
+      height: 3rem;
+      padding: 0 0.75rem 0 2rem;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      border-color: #404040;
+      box-shadow: 0 0 0 2px rgba(64, 64, 64, 0.2);
+    }
+    
+    .form-input[type=number]::-webkit-inner-spin-button, 
+    .form-input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    
+    .form-input[type=number] {
+      -moz-appearance: textfield;
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .radio-label {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 3rem;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      background-color: #f9fafb;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .radio-label:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .radio-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .radio-label.active {
+      border-color: #404040;
+      background-color: rgba(64, 64, 64, 0.1);
+      color: #404040;
+    }
+    
+    .slider-container {
+      margin-bottom: 0.5rem;
+    }
+    
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .slider-value {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #404040;
+    }
+    
+    .custom-slider {
+      width: 100%;
+      height: 4px;
+      background-color: #e5e7eb;
+      border-radius: 999px;
+      position: relative;
+      margin: 1rem 0;
+    }
+    
+    .slider-track {
+      position: absolute;
+      height: 100%;
+      background-color: #404040;
+      border-radius: 999px;
+    }
+    
+    .slider-thumb {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: #404040;
+      border-radius: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: grab;
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    
+    .calculate-btn {
+      width: 100%;
+      height: 3rem;
+      background-color: #edff00;
+      color: #404040;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    
+    .calculate-btn:hover {
+      background-color: #d4e500;
+    }
+    
+    .results-column {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+    
+    .results-placeholder {
+      text-align: center;
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+    
+    .results-content {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .result-header {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+    }
+    
+    .result-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #404040;
+    }
+    
+    .result-unit {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+    
+    .separator {
+      width: 100%;
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 0.5rem 0;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    
+    .summary-label {
+      color: #6b7280;
+    }
+    
+    .summary-value {
+      font-weight: 500;
+    }
+    
+    .toggle-button {
+      width: 100%;
+      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background-color: transparent;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      color: #111827;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .toggle-button:hover {
+      background-color: #f9fafb;
+    }
+    
+    .schedule-container {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.3s ease;
+    }
+    
+    .schedule-table-container {
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      margin-top: 1rem;
+    }
+    
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+      font-size: 0.875rem;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .schedule-table th {
+      text-align: right;
+      font-weight: 500;
+      color: #6b7280;
+    }
+    
+    .schedule-table th:first-child,
+    .schedule-table td:first-child {
+      text-align: left;
+    }
+    
+    .schedule-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    @media (max-width: 640px) {
+      .hide-on-mobile {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <div class="calculator-content">
+      <div class="calculator-grid">
+        <!-- Input Column -->
+        <div class="input-column">
+          <!-- Purchase Amount -->
+          <div class="form-group">
+            <label class="form-label" for="purchase-amount">Valor da compra</label>
+            <div class="input-wrapper">
+              <span class="currency-symbol">R$</span>
+              <input id="purchase-amount" class="form-input" type="number" min="0" step="100" value="1000">
+            </div>
+          </div>
+          
+          <!-- Interest Rate -->
+          <div class="form-group">
+            <label class="form-label">Taxa de juros mensal</label>
+            <div class="radio-group" id="interest-rate-group">
+              <label class="radio-label active" data-value="1">
+                <input class="radio-input" type="radio" name="interest-rate" value="1" checked>
+                1%
+              </label>
+              <label class="radio-label" data-value="2">
+                <input class="radio-input" type="radio" name="interest-rate" value="2">
+                2%
+              </label>
+              <label class="radio-label" data-value="3">
+                <input class="radio-input" type="radio" name="interest-rate" value="3">
+                3%
+              </label>
+            </div>
+          </div>
+          
+          <!-- Number of Months -->
+          <div class="form-group">
+            <div class="slider-header">
+              <label class="form-label">Número de parcelas</label>
+              <span class="slider-value" id="months-value">6</span>
+            </div>
+            <div class="custom-slider" id="months-slider">
+              <div class="slider-track" style="width: 40%"></div>
+              <div class="slider-thumb" style="left: 40%"></div>
+            </div>
+            <div class="slider-labels">
+              <span>2 meses</span>
+              <span>12 meses</span>
+            </div>
+          </div>
+          
+          <!-- Calculate Button -->
+          <button id="calculate-button" class="calculate-btn">Calcular</button>
+        </div>
+        
+        <!-- Results Column -->
+        <div class="results-column">
+          <div class="results-placeholder" id="results-placeholder">
+            Insira os valores ao lado e clique em calcular para visualizar o resultado
+          </div>
+          
+          <div class="results-content" id="results-content">
+            <div>
+              <div class="result-header">Resultado</div>
+              <div class="result-value">
+                <span id="monthly-payment">R$ 0,00</span> <span class="result-unit">/mês</span>
+              </div>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <div>
+              <div class="summary-row">
+                <span class="summary-label">Valor financiado:</span>
+                <span class="summary-value" id="financed-amount">R$ 0,00</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Valor dos juros:</span>
+                <span class="summary-value" id="interest-amount">R$ 0,00</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Valor total:</span>
+                <span class="summary-value" id="total-amount">R$ 0,00</span>
+              </div>
+            </div>
+            
+            <button id="toggle-schedule" class="toggle-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span>Ver todas as parcelas</span>
+            </button>
+            
+            <div class="schedule-container" id="schedule-container">
+              <div class="schedule-table-container">
+                <table class="schedule-table">
+                  <thead>
+                    <tr>
+                      <th>Mês</th>
+                      <th>Parcela</th>
+                      <th class="hide-on-mobile">Amortização</th>
+                      <th class="hide-on-mobile">Juros</th>
+                      <th>Saldo</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schedule-body">
+                    <!-- Table rows will be dynamically added here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // DOM Elements
+    const purchaseAmountInput = document.getElementById('purchase-amount');
+    const interestRateGroup = document.getElementById('interest-rate-group');
+    const monthsSlider = document.getElementById('months-slider');
+    const monthsValue = document.getElementById('months-value');
+    const calculateButton = document.getElementById('calculate-button');
+    const resultsPlaceholder = document.getElementById('results-placeholder');
+    const resultsContent = document.getElementById('results-content');
+    const monthlyPaymentEl = document.getElementById('monthly-payment');
+    const financedAmountEl = document.getElementById('financed-amount');
+    const interestAmountEl = document.getElementById('interest-amount');
+    const totalAmountEl = document.getElementById('total-amount');
+    const toggleScheduleButton = document.getElementById('toggle-schedule');
+    const scheduleContainer = document.getElementById('schedule-container');
+    const scheduleBody = document.getElementById('schedule-body');
+    
+    // State
+    let purchaseAmount = 1000;
+    let interestRate = 1;
+    let months = 6;
+    let isCalculated = false;
+    let showSchedule = false;
+    let schedule = [];
+    
+    // Calculate monthly payment using Price Table formula
+    function calculateMonthlyPayment(principal, interestRate, months) {
+      // Convert interest rate to monthly decimal
+      const monthlyRate = interestRate / 100;
+      
+      // Price table formula: PMT = P * [r(1+r)^n] / [(1+r)^n - 1]
+      const numerator = monthlyRate * Math.pow(1 + monthlyRate, months);
+      const denominator = Math.pow(1 + monthlyRate, months) - 1;
+      
+      // Avoid division by zero
+      if (denominator === 0) return principal / months;
+      
+      return principal * (numerator / denominator);
+    }
+    
+    // Calculate amortization schedule
+    function calculateAmortizationSchedule(principal, interestRate, months) {
+      const monthlyRate = interestRate / 100;
+      const monthlyPayment = calculateMonthlyPayment(principal, interestRate, months);
+      const schedule = [];
+      
+      let remainingBalance = principal;
+      
+      for (let month = 1; month <= months; month++) {
+        const interestPayment = remainingBalance * monthlyRate;
+        const principalPayment = monthlyPayment - interestPayment;
+        remainingBalance -= principalPayment;
+        
+        schedule.push({
+          month,
+          payment: monthlyPayment,
+          principalPayment,
+          interestPayment,
+          remainingBalance: Math.max(0, remainingBalance),
+        });
+      }
+      
+      return schedule;
+    }
+    
+    // Format currency
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value);
+    }
+    
+    // Event Listeners
+    purchaseAmountInput.addEventListener('change', function() {
+      purchaseAmount = parseFloat(this.value) || 0;
+      if (isCalculated) calculateResults();
+    });
+    
+    interestRateGroup.addEventListener('click', function(e) {
+      const label = e.target.closest('.radio-label');
+      if (!label) return;
+      
+      // Update UI
+      document.querySelectorAll('.radio-label').forEach(el => {
+        el.classList.remove('active');
+      });
+      label.classList.add('active');
+      
+      // Update radio button
+      const radio = label.querySelector('input');
+      radio.checked = true;
+      
+      // Update state
+      interestRate = parseFloat(label.dataset.value);
+      if (isCalculated) calculateResults();
+    });
+    
+    // Slider functionality
+    let isDragging = false;
+    
+    monthsSlider.addEventListener('mousedown', startDrag);
+    monthsSlider.addEventListener('touchstart', startDrag);
+    
+    function startDrag(e) {
+      e.preventDefault();
+      isDragging = true;
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      document.addEventListener('touchend', stopDrag);
+      drag(e);
+    }
+    
+    function drag(e) {
+      if (!isDragging) return;
+      
+      const slider = monthsSlider;
+      const rect = slider.getBoundingClientRect();
+      let clientX;
+      
+      if (e.type.includes('touch')) {
+        clientX = e.touches[0].clientX;
+      } else {
+        clientX = e.clientX;
+      }
+      
+      // Calculate percentage
+      let percentage = (clientX - rect.left) / rect.width;
+      percentage = Math.max(0, Math.min(1, percentage));
+      
+      // Calculate months (2-12)
+      months = Math.round(percentage * 10) + 2;
+      
+      // Update UI
+      updateSlider();
+      
+      if (isCalculated) calculateResults();
+    }
+    
+    function stopDrag() {
+      isDragging = false;
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchend', stopDrag);
+    }
+    
+    function updateSlider() {
+      // Update position and value
+      const percentage = (months - 2) / 10;
+      monthsSlider.querySelector('.slider-track').style.width = `${percentage * 100}%`;
+      monthsSlider.querySelector('.slider-thumb').style.left = `${percentage * 100}%`;
+      monthsValue.textContent = months;
+    }
+    
+    calculateButton.addEventListener('click', function() {
+      calculateResults();
+    });
+    
+    function calculateResults() {
+      if (purchaseAmount <= 0) return;
+      
+      const monthlyPayment = calculateMonthlyPayment(purchaseAmount, interestRate, months);
+      const totalPayment = monthlyPayment * months;
+      const totalInterest = totalPayment - purchaseAmount;
+      
+      schedule = calculateAmortizationSchedule(purchaseAmount, interestRate, months);
+      
+      // Update UI with results
+      monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
+      financedAmountEl.textContent = formatCurrency(purchaseAmount);
+      interestAmountEl.textContent = formatCurrency(totalInterest);
+      totalAmountEl.textContent = formatCurrency(totalPayment);
+      
+      // Show results and hide placeholder
+      resultsPlaceholder.style.display = 'none';
+      resultsContent.style.display = 'flex';
+      
+      // Generate schedule table
+      scheduleBody.innerHTML = '';
+      schedule.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.month}</td>
+          <td>${formatCurrency(item.payment)}</td>
+          <td class="hide-on-mobile">${formatCurrency(item.principalPayment)}</td>
+          <td class="hide-on-mobile">${formatCurrency(item.interestPayment)}</td>
+          <td>${formatCurrency(item.remainingBalance)}</td>
+        `;
+        scheduleBody.appendChild(row);
+      });
+      
+      isCalculated = true;
+    }
+    
+    toggleScheduleButton.addEventListener('click', function() {
+      showSchedule = !showSchedule;
+      
+      if (showSchedule) {
+        scheduleContainer.style.height = '300px';
+        this.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414 0l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+          </svg>
+          <span>Ocultar parcelas</span>
+        `;
+      } else {
+        scheduleContainer.style.height = '0';
+        this.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          <span>Ver todas as parcelas</span>
+        `;
+      }
+    });
+    
+    // Initialize slider position
+    updateSlider();
+  </script>
+</body>
+</html>
