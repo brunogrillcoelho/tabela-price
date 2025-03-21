@@ -1,4 +1,3 @@
-
 /**
  * Price Table Calculator - Standalone Embeddable Version
  * 
@@ -450,7 +449,7 @@
                 <div class="price-calc-slider-thumb" style="left: 45.45%"></div>
               </div>
               <div class="price-calc-slider-minmax">
-                <span>1 mês</span>
+                <span>2 meses</span>
                 <span>12 meses</span>
               </div>
             </div>
@@ -544,8 +543,8 @@
       let percentage = (clientX - rect.left) / rect.width;
       percentage = Math.max(0, Math.min(1, percentage));
       
-      // Calculate months (1-12)
-      months = Math.round(percentage * 11) + 1;
+      // Calculate months (2-12)
+      months = Math.round(percentage * 10) + 2;
       
       // Update UI
       updateSlider();
@@ -563,7 +562,7 @@
     
     function updateSlider() {
       // Update position and value
-      const percentage = (months - 1) / 11;
+      const percentage = (months - 2) / 10;
       monthsSlider.querySelector('.price-calc-slider-track').style.width = `${percentage * 100}%`;
       monthsSlider.querySelector('.price-calc-slider-thumb').style.left = `${percentage * 100}%`;
       monthsValue.textContent = months;
