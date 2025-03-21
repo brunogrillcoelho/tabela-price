@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDown, ChevronUp } from "lucide-react";
-
 interface CalculatorResultsProps {
   isCalculated: boolean;
   purchaseAmount: number;
@@ -21,7 +19,6 @@ interface CalculatorResultsProps {
     remainingBalance: number;
   }>;
 }
-
 const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   isCalculated,
   purchaseAmount,
@@ -29,7 +26,7 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   totalPayment,
   totalInterest,
   formatCurrency,
-  schedule,
+  schedule
 }) => {
   const [showSchedule, setShowSchedule] = useState(false);
 
@@ -37,39 +34,35 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   const toggleSchedule = () => {
     setShowSchedule(!showSchedule);
   };
-
   if (!isCalculated) {
-    return (
-      <div className="flex items-center justify-center h-full min-h-[300px]">
+    return <div className="flex items-center justify-center h-full min-h-[300px]">
         <div className="text-center space-y-4">
-          <div className="text-calculator-foreground/40 text-sm">
-            Insira os valores ao lado e clique em calcular
-            para visualizar o resultado
-          </div>
+          <div className="text-calculator-foreground/40 text-sm">Insira os valores e clique em calcular para ver o resultado</div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        key="results"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        className="space-y-6"
-      >
+  return <AnimatePresence>
+      <motion.div key="results" initial={{
+      opacity: 0
+    }} animate={{
+      opacity: 1
+    }} transition={{
+      duration: 0.3,
+      delay: 0.1
+    }} className="space-y-6">
         <div>
           <div className="text-xs uppercase tracking-wider text-calculator-foreground/60 mb-1">
             Resultado
           </div>
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="text-2xl font-semibold text-calculator-accent"
-          >
+          <motion.div initial={{
+          scale: 0.9
+        }} animate={{
+          scale: 1
+        }} transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20
+        }} className="text-2xl font-semibold text-calculator-accent">
             {formatCurrency(monthlyPayment)} <span className="text-base font-normal">/mês</span>
           </motion.div>
         </div>
@@ -91,33 +84,29 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          onClick={toggleSchedule}
-          className="w-full flex items-center justify-center gap-2 border-calculator-border hover:bg-calculator-muted/80"
-        >
-          {showSchedule ? (
-            <>
+        <Button variant="outline" onClick={toggleSchedule} className="w-full flex items-center justify-center gap-2 border-calculator-border hover:bg-calculator-muted/80">
+          {showSchedule ? <>
               <ChevronUp size={16} />
               <span>Ocultar parcelas</span>
-            </>
-          ) : (
-            <>
+            </> : <>
               <ChevronDown size={16} />
               <span>Ver todas as parcelas</span>
-            </>
-          )}
+            </>}
         </Button>
 
         <AnimatePresence>
-          {showSchedule && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
+          {showSchedule && <motion.div initial={{
+          height: 0,
+          opacity: 0
+        }} animate={{
+          height: "auto",
+          opacity: 1
+        }} exit={{
+          height: 0,
+          opacity: 0
+        }} transition={{
+          duration: 0.3
+        }} className="overflow-hidden">
               <ScrollArea className="h-[240px] rounded-md border border-calculator-border">
                 <div className="p-4">
                   <table className="w-full text-sm">
@@ -131,11 +120,7 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {schedule.map((item) => (
-                        <tr 
-                          key={item.month}
-                          className="border-b border-calculator-border/40 last:border-0"
-                        >
+                      {schedule.map(item => <tr key={item.month} className="border-b border-calculator-border/40 last:border-0">
                           <td className="py-2 text-left">{item.month}</td>
                           <td className="py-2 text-right">
                             {formatCurrency(item.payment)}
@@ -149,18 +134,14 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
                           <td className="py-2 text-right">
                             {formatCurrency(item.remainingBalance)}
                           </td>
-                        </tr>
-                      ))}
+                        </tr>)}
                     </tbody>
                   </table>
                 </div>
               </ScrollArea>
-            </motion.div>
-          )}
+            </motion.div>}
         </AnimatePresence>
       </motion.div>
-    </AnimatePresence>
-  );
+    </AnimatePresence>;
 };
-
 export default CalculatorResults;
