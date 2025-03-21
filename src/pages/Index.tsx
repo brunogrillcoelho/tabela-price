@@ -18,7 +18,7 @@ const Index = () => {
       }} transition={{
         delay: 0.2,
         duration: 0.5
-      }} className="inline-block px-3 py-1 mb-3 text-xs font-medium tracking-wider uppercase bg-primary/10 text-primary rounded-full">SIMULAÇÃO DE PARCELAMENTO</motion.div>
+      }} className="inline-block px-3 py-1 mb-3 text-xs font-medium tracking-wider uppercase text-primary rounded-full bg-[#edff00]/60">SIMULAÇÃO DE PARCELAMENTO</motion.div>
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3">
           Calculadora Tabela Price
         </h1>
