@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Tabela Price - Exemplo de Embedding</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1e293b;
+    }
+    
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .instructions {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .instructions h2 {
+      margin-top: 0;
+      color: #1e293b;
+    }
+    
+    .instructions code {
+      background-color: #f1f5f9;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    .code-block {
+      background-color: #f1f5f9;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: monospace;
+      margin: 15px 0;
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculadora Tabela Price</h1>
+  
+  <div class="container">
+    <!-- O elemento onde a calculadora será renderizada -->
+    <div id="price-calculator"></div>
+  </div>
+  
+  <div class="instructions">
+    <h2>Como incorporar esta calculadora em seu site</h2>
+    <p>Siga estas etapas simples para adicionar a calculadora ao seu site:</p>
+    
+    <ol>
+      <li>Copie o arquivo <code>embedable-calculator.js</code> para o seu servidor</li>
+      <li>Adicione o script ao seu HTML antes do fechamento da tag &lt;/body&gt;</li>
+      <li>Crie um elemento HTML onde deseja que a calculadora apareça</li>
+    </ol>
+    
+    <p>Exemplo de código:</p>
+    <div class="code-block">
+      &lt;!-- 1. Adicione um elemento com um ID onde a calculadora será renderizada --&gt;<br>
+      &lt;div id="price-calculator"&gt;&lt;/div&gt;<br><br>
+      
+      &lt;!-- 2. Inclua o script da calculadora --&gt;<br>
+      &lt;script src="embedable-calculator.js"&gt;&lt;/script&gt;<br><br>
+      
+      &lt;!-- 3. Inicialize a calculadora (opcional se você usar o ID padrão 'price-calculator') --&gt;<br>
+      &lt;script&gt;<br>
+      &nbsp;&nbsp;// Para inicializar com um seletor personalizado:<br>
+      &nbsp;&nbsp;// window.initPriceCalculator('#meu-elemento-personalizado');<br>
+      &lt;/script&gt;
+    </div>
+    
+    <p>A calculadora será automaticamente inicializada se existir um elemento com o ID <code>price-calculator</code>. Caso contrário, você pode inicializá-la manualmente com qualquer seletor CSS usando a função <code>window.initPriceCalculator(seletor)</code>.</p>
+  </div>
+  
+  <!-- Inclua o script da calculadora -->
+  <script src="embedable-calculator.js"></script>
+</body>
+</html>
