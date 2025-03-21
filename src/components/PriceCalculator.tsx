@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Slider } from "@/components/ui/slider";
@@ -155,7 +154,10 @@ const PriceCalculator = () => {
                   </div>
                 </div>
                 
-                <Button onClick={calculateResults} className="w-full h-12 transition-all duration-300 font-extrabold text-neutral-700 bg-[#edff00]">
+                <Button 
+                  onClick={calculateResults} 
+                  className="w-full h-12 transition-all duration-300 font-extrabold text-neutral-700 bg-[#edff00] hover:bg-[#F4FF5C]"
+                >
                   Calcular
                 </Button>
               </div>
