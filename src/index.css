@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 221 83% 53%;
+    --primary: 0 0% 25%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96%;
@@ -37,7 +37,7 @@
 
     --calculator-background: 0 0% 100%;
     --calculator-foreground: 222 47% 11%;
-    --calculator-accent: 221 83% 53%;
+    --calculator-accent: 0 0% 25%;
     --calculator-muted: 210 40% 96%;
     --calculator-border: 214 32% 91%;
   }
@@ -52,7 +52,7 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
+    --primary: 0 0% 25%;
     --primary-foreground: 222 47% 11%;
 
     --secondary: 217 33% 17%;
@@ -73,7 +73,7 @@
 
     --calculator-background: 222 47% 11%;
     --calculator-foreground: 210 40% 98%;
-    --calculator-accent: 217 91% 60%;
+    --calculator-accent: 0 0% 25%;
     --calculator-muted: 217 33% 17%;
     --calculator-border: 217 33% 17%;
   }

@@ -1,4 +1,3 @@
-
 /**
  * Price Table Calculator - Standalone Embeddable Version
  * 
@@ -82,8 +81,8 @@
     }
 
     .price-calc-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      border-color: #404040;
+      box-shadow: 0 0 0 2px rgba(64, 64, 64, 0.2);
     }
 
     .price-calc-input[type=number]::-webkit-inner-spin-button, 
@@ -118,9 +117,9 @@
     }
 
     .price-calc-radio-label.active {
-      border-color: #3b82f6;
-      background-color: rgba(59, 130, 246, 0.1);
-      color: #3b82f6;
+      border-color: #404040;
+      background-color: rgba(64, 64, 64, 0.1);
+      color: #404040;
     }
 
     .price-calc-radio-input {
@@ -145,7 +144,7 @@
     .price-calc-slider-value {
       font-size: 1.125rem;
       font-weight: 500;
-      color: #3b82f6;
+      color: #404040;
     }
 
     .price-calc-slider {
@@ -161,7 +160,7 @@
     .price-calc-slider-track {
       width: 0%;
       height: 100%;
-      background-color: #3b82f6;
+      background-color: #404040;
       border-radius: 999px;
       transition: width 0.3s ease;
     }
@@ -170,7 +169,7 @@
       position: absolute;
       width: 16px;
       height: 16px;
-      background-color: #3b82f6;
+      background-color: #404040;
       border-radius: 50%;
       left: 0%;
       top: 50%;
@@ -196,7 +195,7 @@
       display: block;
       width: 100%;
       height: 3rem;
-      background-color: #3b82f6;
+      background-color: #404040;
       color: white;
       border: none;
       border-radius: 0.375rem;
@@ -206,7 +205,7 @@
     }
 
     .price-calc-button:hover {
-      background-color: #2563eb;
+      background-color: #333333;
     }
 
     .price-calc-results {
@@ -242,7 +241,7 @@
     .price-calc-result-value {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #3b82f6;
+      color: #404040;
     }
 
     .price-calc-result-value span {
@@ -654,7 +653,7 @@
           scheduleContainer.style.height = '300px';
           this.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+              <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
             <span>Ocultar parcelas</span>
           `;

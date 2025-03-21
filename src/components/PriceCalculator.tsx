@@ -42,6 +42,7 @@ const calculateAmortizationSchedule = (principal: number, interestRate: number, 
   }
   return schedule;
 };
+
 const PriceCalculator = () => {
   const [purchaseAmount, setPurchaseAmount] = useState<number>(1000);
   const [interestRate, setInterestRate] = useState<number>(1);
@@ -165,4 +166,5 @@ const PriceCalculator = () => {
       </motion.div>
     </div>;
 };
+
 export default PriceCalculator;
