@@ -54,17 +54,33 @@ const PriceCalculator = () => {
   const [schedule, setSchedule] = useState<any[]>([]);
   const [isCalculated, setIsCalculated] = useState<boolean>(false);
   const [fixedRate, setFixedRate] = useState<number | null>(null);
+  const [maxMonths, setMaxMonths] = useState<number>(12);
 
   // Read URL parameters on component mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const taxaParam = urlParams.get('taxa');
     
+    // Handle taxa (interest rate) parameter
+    const taxaParam = urlParams.get('taxa');
     if (taxaParam) {
       const parsedRate = parseFloat(taxaParam);
       if (!isNaN(parsedRate) && parsedRate > 0) {
         setInterestRate(parsedRate);
         setFixedRate(parsedRate);
+      }
+    }
+    
+    // Handle parcelas (max months) parameter
+    const parcelasParam = urlParams.get('parcelas');
+    if (parcelasParam) {
+      const parsedMaxMonths = parseInt(parcelasParam, 10);
+      if (!isNaN(parsedMaxMonths) && parsedMaxMonths > 0) {
+        setMaxMonths(parsedMaxMonths);
+        
+        // If current months is greater than new max, adjust it
+        if (months > parsedMaxMonths) {
+          setMonths(parsedMaxMonths);
+        }
       }
     }
   }, []);
@@ -170,10 +186,10 @@ const PriceCalculator = () => {
                       {months}
                     </span>
                   </div>
-                  <Slider value={[months]} min={2} max={12} step={1} onValueChange={handleMonthsChange} className="py-2" />
+                  <Slider value={[months]} min={2} max={maxMonths} step={1} onValueChange={handleMonthsChange} className="py-2" />
                   <div className="flex justify-between text-xs text-calculator-foreground/70">
                     <span>2 meses</span>
-                    <span>12 meses</span>
+                    <span>{maxMonths} meses</span>
                   </div>
                 </div>
                 

@@ -414,7 +414,7 @@
               </div>
             </div>
             
-            <div>
+            <div id="interest-rate-container">
               <label class="price-calc-label">Taxa de juros mensal</label>
               <div class="price-calc-radio-group" id="interest-rate-group">
                 <label class="price-calc-radio-label active" data-value="1">
@@ -443,7 +443,7 @@
               </div>
               <div class="price-calc-slider-minmax">
                 <span>2 meses</span>
-                <span>12 meses</span>
+                <span id="max-months-label">12 meses</span>
               </div>
             </div>
             
@@ -464,9 +464,11 @@
     
     // DOM elements
     const purchaseAmountInput = document.getElementById('purchase-amount');
+    const interestRateContainer = document.getElementById('interest-rate-container');
     const interestRateGroup = document.getElementById('interest-rate-group');
     const monthsSlider = document.getElementById('months-slider');
     const monthsValue = document.getElementById('months-value');
+    const maxMonthsLabel = document.getElementById('max-months-label');
     const calculateButton = document.getElementById('calculate-button');
     const resultsContainer = document.getElementById('calculator-results');
     
@@ -474,9 +476,47 @@
     let purchaseAmount = 1000;
     let interestRate = 1;
     let months = 6;
+    let maxMonths = 12;
     let isCalculated = false;
     let showSchedule = false;
     let schedule = [];
+    let fixedRate = null;
+    
+    // Read URL parameters on initialization
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Handle taxa (interest rate) parameter
+    const taxaParam = urlParams.get('taxa');
+    if (taxaParam) {
+      const parsedRate = parseFloat(taxaParam);
+      if (!isNaN(parsedRate) && parsedRate > 0) {
+        interestRate = parsedRate;
+        fixedRate = parsedRate;
+        
+        // Replace radio buttons with fixed rate display
+        const fixedRateElement = document.createElement('div');
+        fixedRateElement.className = 'h-12 flex items-center px-3 rounded-md border border-calculator-border bg-calculator-muted/50';
+        fixedRateElement.innerHTML = `<span>${fixedRate}%</span>`;
+        interestRateContainer.removeChild(interestRateGroup);
+        interestRateContainer.appendChild(fixedRateElement);
+      }
+    }
+    
+    // Handle parcelas (max months) parameter
+    const parcelasParam = urlParams.get('parcelas');
+    if (parcelasParam) {
+      const parsedMaxMonths = parseInt(parcelasParam, 10);
+      if (!isNaN(parsedMaxMonths) && parsedMaxMonths > 0) {
+        maxMonths = parsedMaxMonths;
+        maxMonthsLabel.textContent = `${maxMonths} meses`;
+        
+        // If current months is greater than new max, adjust it
+        if (months > maxMonths) {
+          months = maxMonths;
+          updateSlider();
+        }
+      }
+    }
     
     // Event Listeners
     purchaseAmountInput.addEventListener('change', function() {
@@ -484,24 +524,26 @@
       if (isCalculated) calculateResults();
     });
     
-    interestRateGroup.addEventListener('click', function(e) {
-      const label = e.target.closest('.price-calc-radio-label');
-      if (!label) return;
-      
-      // Update UI
-      document.querySelectorAll('.price-calc-radio-label').forEach(el => {
-        el.classList.remove('active');
+    if (fixedRate === null) {
+      interestRateGroup.addEventListener('click', function(e) {
+        const label = e.target.closest('.price-calc-radio-label');
+        if (!label) return;
+        
+        // Update UI
+        document.querySelectorAll('.price-calc-radio-label').forEach(el => {
+          el.classList.remove('active');
+        });
+        label.classList.add('active');
+        
+        // Update radio button
+        const radio = label.querySelector('input');
+        radio.checked = true;
+        
+        // Update state
+        interestRate = parseFloat(label.dataset.value);
+        if (isCalculated) calculateResults();
       });
-      label.classList.add('active');
-      
-      // Update radio button
-      const radio = label.querySelector('input');
-      radio.checked = true;
-      
-      // Update state
-      interestRate = parseFloat(label.dataset.value);
-      if (isCalculated) calculateResults();
-    });
+    }
     
     // Slider functionality
     let isDragging = false;
@@ -536,8 +578,10 @@
       let percentage = (clientX - rect.left) / rect.width;
       percentage = Math.max(0, Math.min(1, percentage));
       
-      // Calculate months (2-12)
-      months = Math.round(percentage * 10) + 2;
+      // Calculate months (2-maxMonths)
+      const range = maxMonths - 2;
+      months = Math.round(percentage * range) + 2;
+      months = Math.min(months, maxMonths);
       
       // Update UI
       updateSlider();
@@ -555,7 +599,7 @@
     
     function updateSlider() {
       // Update position and value
-      const percentage = (months - 2) / 10;
+      const percentage = (months - 2) / (maxMonths - 2);
       monthsSlider.querySelector('.price-calc-slider-track').style.width = `${percentage * 100}%`;
       monthsSlider.querySelector('.price-calc-slider-thumb').style.left = `${percentage * 100}%`;
       monthsValue.textContent = months;
