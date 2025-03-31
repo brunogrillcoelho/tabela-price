@@ -45,9 +45,9 @@ const calculateAmortizationSchedule = (principal: number, interestRate: number, 
 };
 
 const PriceCalculator = () => {
-  const [purchaseAmount, setPurchaseAmount] = useState<number>(1000);
+  const [purchaseAmount, setPurchaseAmount] = useState<number>(100);
   const [interestRate, setInterestRate] = useState<number>(1);
-  const [months, setMonths] = useState<number>(6);
+  const [months, setMonths] = useState<number>(3);
   const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
   const [totalPayment, setTotalPayment] = useState<number>(0);
   const [totalInterest, setTotalInterest] = useState<number>(0);
