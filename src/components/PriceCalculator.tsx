@@ -1,12 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from 'react-router-dom';
 import CalculatorResults from './CalculatorResults';
 
 // Calculate monthly payment using Price Table formula
@@ -45,13 +44,8 @@ const calculateAmortizationSchedule = (principal: number, interestRate: number, 
 };
 
 const PriceCalculator = () => {
-  const [searchParams] = useSearchParams();
-  
-  // Get interest rate from URL or use default value of 1%
-  const urlInterestRate = parseFloat(searchParams.get('taxa') || '1');
-  const interestRate = isNaN(urlInterestRate) || urlInterestRate <= 0 ? 1 : urlInterestRate;
-
   const [purchaseAmount, setPurchaseAmount] = useState<number>(1000);
+  const [interestRate, setInterestRate] = useState<number>(1);
   const [months, setMonths] = useState<number>(6);
   const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
   const [totalPayment, setTotalPayment] = useState<number>(0);
@@ -71,6 +65,12 @@ const PriceCalculator = () => {
   const handlePurchaseAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setPurchaseAmount(isNaN(value) ? 0 : value);
+    setIsCalculated(false);
+  };
+
+  // Handle interest rate selection
+  const handleInterestRateChange = (value: string) => {
+    setInterestRate(parseFloat(value));
     setIsCalculated(false);
   };
 
@@ -100,7 +100,6 @@ const PriceCalculator = () => {
       calculateResults();
     }
   }, [purchaseAmount, interestRate, months]);
-  
   return <div className="w-full max-w-4xl mx-auto">
       <motion.div initial={{
       opacity: 0,
@@ -131,9 +130,12 @@ const PriceCalculator = () => {
                   <Label className="text-sm font-medium text-calculator-foreground">
                     Taxa de juros mensal
                   </Label>
-                  <div className="flex items-center justify-start h-12 px-4 rounded-md bg-calculator-muted/50 border-calculator-border border">
-                    <span className="text-lg font-medium text-calculator-foreground">{interestRate}%</span>
-                  </div>
+                  <RadioGroup value={interestRate.toString()} onValueChange={handleInterestRateChange} className="flex space-x-2">
+                    {[1, 2, 3].map(rate => <Label key={rate} htmlFor={`rate-${rate}`} className={`flex-1 flex items-center justify-center h-12 rounded-md border transition-all duration-200 ${interestRate === rate ? "border-calculator-accent bg-calculator-accent/10 text-calculator-accent" : "border-calculator-border bg-calculator-muted/50 hover:bg-calculator-muted/80"}`}>
+                        <RadioGroupItem value={rate.toString()} id={`rate-${rate}`} className="sr-only" />
+                        {rate}%
+                      </Label>)}
+                  </RadioGroup>
                 </div>
                 
                 <div className="space-y-3">
