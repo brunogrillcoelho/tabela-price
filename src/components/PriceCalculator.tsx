@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Slider } from "@/components/ui/slider";
@@ -52,6 +53,21 @@ const PriceCalculator = () => {
   const [totalInterest, setTotalInterest] = useState<number>(0);
   const [schedule, setSchedule] = useState<any[]>([]);
   const [isCalculated, setIsCalculated] = useState<boolean>(false);
+  const [fixedRate, setFixedRate] = useState<number | null>(null);
+
+  // Read URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const taxaParam = urlParams.get('taxa');
+    
+    if (taxaParam) {
+      const parsedRate = parseFloat(taxaParam);
+      if (!isNaN(parsedRate) && parsedRate > 0) {
+        setInterestRate(parsedRate);
+        setFixedRate(parsedRate);
+      }
+    }
+  }, []);
 
   // Format currency
   const formatCurrency = (value: number): string => {
@@ -100,6 +116,7 @@ const PriceCalculator = () => {
       calculateResults();
     }
   }, [purchaseAmount, interestRate, months]);
+  
   return <div className="w-full max-w-4xl mx-auto">
       <motion.div initial={{
       opacity: 0,
@@ -130,12 +147,18 @@ const PriceCalculator = () => {
                   <Label className="text-sm font-medium text-calculator-foreground">
                     Taxa de juros mensal
                   </Label>
-                  <RadioGroup value={interestRate.toString()} onValueChange={handleInterestRateChange} className="flex space-x-2">
-                    {[1, 2, 3].map(rate => <Label key={rate} htmlFor={`rate-${rate}`} className={`flex-1 flex items-center justify-center h-12 rounded-md border transition-all duration-200 ${interestRate === rate ? "border-calculator-accent bg-calculator-accent/10 text-calculator-accent" : "border-calculator-border bg-calculator-muted/50 hover:bg-calculator-muted/80"}`}>
-                        <RadioGroupItem value={rate.toString()} id={`rate-${rate}`} className="sr-only" />
-                        {rate}%
-                      </Label>)}
-                  </RadioGroup>
+                  {fixedRate !== null ? (
+                    <div className="h-12 flex items-center px-3 rounded-md border border-calculator-border bg-calculator-muted/50">
+                      <span>{fixedRate}%</span>
+                    </div>
+                  ) : (
+                    <RadioGroup value={interestRate.toString()} onValueChange={handleInterestRateChange} className="flex space-x-2">
+                      {[1, 2, 3].map(rate => <Label key={rate} htmlFor={`rate-${rate}`} className={`flex-1 flex items-center justify-center h-12 rounded-md border transition-all duration-200 ${interestRate === rate ? "border-calculator-accent bg-calculator-accent/10 text-calculator-accent" : "border-calculator-border bg-calculator-muted/50 hover:bg-calculator-muted/80"}`}>
+                          <RadioGroupItem value={rate.toString()} id={`rate-${rate}`} className="sr-only" />
+                          {rate}%
+                        </Label>)}
+                    </RadioGroup>
+                  )}
                 </div>
                 
                 <div className="space-y-3">
