@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
 interface CalculatorResultsProps {
   isCalculated: boolean;
   purchaseAmount: number;
@@ -19,6 +21,7 @@ interface CalculatorResultsProps {
     remainingBalance: number;
   }>;
 }
+
 const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   isCalculated,
   purchaseAmount,
@@ -34,6 +37,7 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   const toggleSchedule = () => {
     setShowSchedule(!showSchedule);
   };
+
   if (!isCalculated) {
     return <div className="flex items-center justify-center h-full min-h-[300px]">
         <div className="text-center space-y-4">
@@ -41,6 +45,7 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
         </div>
       </div>;
   }
+
   return <AnimatePresence>
       <motion.div key="results" initial={{
       opacity: 0
@@ -139,7 +144,12 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
               </ScrollArea>
             </motion.div>}
         </AnimatePresence>
+        
+        <div className="text-xs text-calculator-foreground/60 text-center italic pt-1">
+          Os cálculos variam de acordo com a data da compra e data de vencimento da fatura
+        </div>
       </motion.div>
     </AnimatePresence>;
 };
+
 export default CalculatorResults;
